@@ -10,10 +10,15 @@
 <body>
   <div class="jumbotron">
     <h1 class="display-4 text-center">Mission To Mars
-        <a class="btn btn-primary btn-sm" href="/scrape" role="button">Scrape New Data</a>
+      <a class="btn btn-primary btn-sm" href="/scrape" role="button">Scrape New Data</a>
     </h1>
   </div>
   <div class="container">
+    <div class="row">
+      <div class="col-md">
+        {{result_message|safe}}
+      </div>
+    </div>
     <div class="row">
       <div class="col-md">
         <h2>Featured Image</h2>

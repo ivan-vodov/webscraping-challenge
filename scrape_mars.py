@@ -8,22 +8,15 @@ import time
 import pandas as pd
 
 # browser init for splinter
-def init_browser():
-    executable_path = {"executable_path": r"C:/chromedriver.exe"}
-    return Browser("chrome", **executable_path, headless=False)
 
-def scrape():
-# open browser window using splinter 
-    browser = init_browser()
-
-    # Initialize PyMongo to work with MongoDBs
-    conn = 'mongodb://localhost:27017'
-    client = pymongo.MongoClient(conn)
-
-    # Define database and collection
-    db = client.mission_to_mars_db
-    collection = db.items
-    db.items.delete_many({})
+def scrape(db):
+# open browser window using splinter
+    try:
+        executable_path = {"executable_path": r"C:/chromedriver.exe"}
+        browser=Browser("chrome", **executable_path, headless=False)
+    except Exception as e:
+        print(e)
+        raise Exception("Error while initiating the scraping driver.")
 
 
     # # Scraping
@@ -62,16 +55,12 @@ def scrape():
 
     soup = BeautifulSoup(browser.html, 'lxml')
     results=soup.find_all('div', class_='download_tiff')
-      
+    featured_image_url=''
+
     for result in results:
-        # Error handling
-        try:
-            # Identify and return URL of jpeg image
-            if ('jpg' in result.find('a').text):
-                featured_image_url= 'https:'+result.find('a')['href']    
-        except Exception as e:
-            print(e)
-        
+        if ('jpg' in result.find('a').text):
+            featured_image_url= 'https:'+result.find('a')['href']    
+      
 
     # ## Mars Weather
 
@@ -129,6 +118,7 @@ def scrape():
                 img_page_urls.append(img_page_url)
         except Exception as e:
             print(e)
+            raise Exception("Error occurred while scraping data")
 
     print(thumb_urls)
     print(titles)
@@ -160,12 +150,9 @@ def scrape():
             'hemisphere_image_urls': mars_hemispheres_imgs
         }
 
-    # Insert data into Mongo DB
-    try:
-        db.items.insert_one(mars_record)
-        return 1;
-    except Exception as e:
-        print(e)
-        return -1;
+    # Delete previous data and insert new into Mongo DB
+    db.items.delete_many({})
+    db.items.insert_one(mars_record)
+
 
 
