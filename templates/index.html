@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Mission To Mars</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css">
+</head>
+
+<body>
+  <div class="jumbotron">
+    <h1 class="display-4 text-center">Mission To Mars
+        <a class="btn btn-primary btn-sm" href="/scrape" role="button">Scrape New Data</a>
+    </h1>
+  </div>
+  <div class="container">
+    <div class="row">
+      <div class="col-md">
+        <h2>Featured Image</h2>
+        <a href="{{mars_data.featured_image_url}}" target="_blank">
+          <img src="{{mars_data.featured_image_url}}" class="figure-img img-fluid rounded">
+        </a>
+        <p>&nbsp;</p>
+      </div>
+      <div class="col-md table-sm table-striped table-borderless small">
+        <h2>Facts</h2>
+        {{mars_data.mars_facts|safe}}
+        <p>&nbsp;</p>
+      </div>
+      <div class="col-md-3">
+        <h2>Latest News</h2>
+        <p class="text-uppercase">
+          {{mars_data.news_title}}
+        </p>
+        <p class="font-weight-light">{{mars_data.news_p}}</p>
+
+        <h2>Weather</h2>
+        <p class="font-weight-light">{{mars_data.mars_weather}}</p>
+
+      </div>
+    </div>
+    <div class="row align-items-end">
+      <div class="col-md-12">
+        <h2>Hemispheres</h2>
+      </div>
+      {% for hemi in mars_data.hemisphere_image_urls%}
+      <div class="col-md">
+        <figure class="figure">
+          <a href="{{hemi.img_url}}" target="_blank">
+            <figcaption class="figure-caption">{{hemi.title}}</figcaption>
+            <img src="{{hemi.img_url}}" class="figure-img img-fluid rounded">
+          </a>
+        </figure>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</body>
+
+</html>
